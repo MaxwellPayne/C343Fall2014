@@ -1,8 +1,6 @@
 from utilities import up, right, down, left, in_bounds, STEP_SIZE
 from itertools import chain
 
-
-
 # Size code uplicates screen_size code from floodit.py
 # but I recreate the size here so that I don't have to
 # alter floodit.py
@@ -33,7 +31,7 @@ def adjacency_list(screen_size, step):
 
     return edge_list
 
-ADJACENCY_LIST = adjacency_list(SCREEN_SIZE, STEP_SIZE)
+#ADJACENCY_LIST = adjacency_list(SCREEN_SIZE, STEP_SIZE)
 
 def _main():
     matrix = adjacency_list(SCREEN_SIZE, STEP_SIZE)

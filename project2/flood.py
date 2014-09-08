@@ -1,16 +1,26 @@
 from utilities import *
-from cheating import ADJACENCY_LIST
-# adjacency list
+from adjacency import adjacency_list
+# bring in the adjacency list from the cheat
+
+_ADJACENCY_LIST = None
 
 def flood(color_of_tile, flooded_list, screen_size):
-    region_color = color_of_tile[flooded_list[0]]
-    print 'region_color %s' % region_color
+    global _ADJACENCY_LIST
+    if not _ADJACENCY_LIST:
+        _ADJACENCY_LIST = adjacency_list(screen_size, STEP_SIZE)
 
-    #return
+    region_color = color_of_tile[flooded_list[0]]
+    # the region color will be color of origin
+
     flooded_set = set(flooded_list)
+    # set of all flooded tiles; allows constant-time lookup
     visited_tiles = set()
+    # set of all tiles visited this round
 
     def follow_adjacent(coords):
+        """Tests to see if coords is same color as region,
+        if so adds it to the flooded list and recurs on
+        the neighboring tiles"""
         if coords in visited_tiles or color_of_tile[coords] != region_color:
             visited_tiles.add(coords) # adds to visited if not there already
             return
@@ -22,13 +32,12 @@ def flood(color_of_tile, flooded_list, screen_size):
             # mutate the flooded_list as well
             flooded_list.append(coords)
 
-            neighbors = ADJACENCY_LIST[coords]
-            # neighbors are all edges
+            # neighbors are all the coords' edges
+            neighbors = _ADJACENCY_LIST[coords]
 
             for neighbor in neighbors:
                 # recur on the neighbors
                 follow_adjacent(neighbor)
-
 
     for tile in flooded_list:
         follow_adjacent(tile)
