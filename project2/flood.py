@@ -1,5 +1,5 @@
 from utilities import *
-from adjacency import adjacency_list
+from adjacency import adjacency_list, get_screen_size
 # bring in the adjacency list from the cheat
 
 _ADJACENCY_LIST = None
@@ -7,7 +7,10 @@ _ADJACENCY_LIST = None
 def flood(color_of_tile, flooded_list, screen_size):
     global _ADJACENCY_LIST
     if not _ADJACENCY_LIST:
-        _ADJACENCY_LIST = adjacency_list(screen_size, STEP_SIZE)
+        from math import sqrt
+        board_size = sqrt(len(color_of_tile))
+        actual_screen_size = get_screen_size(board_size)
+        _ADJACENCY_LIST = adjacency_list(actual_screen_size, STEP_SIZE)
 
     region_color = color_of_tile[flooded_list[0]]
     # the region color will be color of origin

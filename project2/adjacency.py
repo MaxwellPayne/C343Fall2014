@@ -10,12 +10,12 @@ def get_screen_size(bsize):
 
 SCREEN_SIZE = get_screen_size(board_size)
 
-def neighbors(central_coord):
+def neighbors(central_coord, screen_size):
     neighbor_creators = tuple((up, right, down, left))
     neighbors = []
     for neighbor_func in neighbor_creators:
         potential_neighbor = neighbor_func(central_coord)
-        if in_bounds(potential_neighbor, SCREEN_SIZE):
+        if in_bounds(potential_neighbor, screen_size):
             neighbors.append(potential_neighbor)
     return neighbors
 
@@ -27,7 +27,7 @@ def adjacency_list(screen_size, step):
     edge_list = {coord: None for coord in chain.from_iterable(tiles)}
 
     for vertex in edge_list.keys():
-        edge_list[vertex] = neighbors(vertex)
+        edge_list[vertex] = neighbors(vertex, screen_size)
 
     return edge_list
 
