@@ -31,8 +31,10 @@ def _main(argv):
     plt.xlabel('#tiles'); plt.ylabel('Time')
     xpts = [math.sqrt(float(xval)) for xval in xvals]
     # plt.xticks(xpts, [str(sz) for sz in xpts])
-    plt.plot(xvals, yvals, 'bo-')
-    plt.plot(xvals, yvals_old, 'ro-')
+    first_csv = plt.plot(xvals, yvals, 'bo-', label=argv[0].replace('.csv', ''))
+    second_csv = plt.plot(xvals, yvals_old, 'ro-', label=argv[1].replace('.csv', ''))
+    plt.legend(loc=2, handles=[first_csv[0], second_csv[0]])
+    plt.savefig('runtime-comparison.png')
     plt.show()
 
 
