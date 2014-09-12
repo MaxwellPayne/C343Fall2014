@@ -1,10 +1,11 @@
+#from flood1 import flood
+from flood2 import flood
+
 import pygame
 # import pygame._view
 from pygame import *
 import random
 
-from flood1 import flood
-# from flood2 import flood
 # from flood_array import flood
 from utilities import *
 from drought import create_drought
