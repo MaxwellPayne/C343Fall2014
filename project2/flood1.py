@@ -16,7 +16,7 @@ def flood(color_of_tile, flooded_list, screen_size):
     visited_tiles=[]
     region_color=color_of_tile[flooded_list[0]]
 
-    def follow_adjacent(coords):
+    def follow(coords):
         """Tests to see if coords is same color as region,
         if so adds it to the flooded list and recurs on
         the neighboring tiles"""
@@ -33,9 +33,9 @@ def flood(color_of_tile, flooded_list, screen_size):
             flooded_list.append(coords)
 
             # neighbors are all the coords' edges
-            neighbors = neighbors(coords, screen_size)
+            tile_neighbors = neighbors(coords, screen_size)
 
-            for neighbor in neighbors:
+            for neighbor in tile_neighbors:
                 # recur on the neighbors
                 follow(neighbor)
 
