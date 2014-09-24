@@ -45,18 +45,20 @@ class BinarySearchTree(object):
         self.less = less
 
     def __str__(self):
-        
         # recursive function that creates a list of nodes
         # for each level, None if node doesn't exist at that slot
-        def drill_down(node_list, accumulated):
-            nones_filtered_out = filter(lambda x: x is not None, node_list)
+        from itertools import chain
 
-            if len(nones_filtered_out) > 0:
-                this_layer = [(n.left, n.right) for n in nones_filtered_out]
-                this_layer = tuple(itertools.chain(*this_layer))
+        # recursively accumulates nodes at each level of tree
+        def drill_down(node_list, accumulated):
+            if any(isinstance(n, BSTNode) for n in node_list):
+            # there are leaves left to explore
+                this_layer = [(n.left, n.right) if n else (None,) for n in node_list]
+                this_layer = tuple(chain(*this_layer))
                 accumulated.append(this_layer)
                 return drill_down(this_layer, accumulated)
             else:
+                # last level was all leaves, remove it and return
                 accumulated.pop()
                 return accumulated
 
@@ -71,17 +73,29 @@ class BinarySearchTree(object):
         # center all the nodes
         stringified_layers = []
         for level in levels:
-            level_str = ' '.join(map(lambda n: str(n).center(WIDTH) if n else ' <Leaf> ', level))
+            level_str = ' '.join(map(lambda n: str(n).center(WIDTH) if n else '<Null> ', level))
             stringified_layers.append(level_str.center(bottom_width))
 
-        return '\n'.join(stringified_layers)
+        return '\n'.join(stringified_layers) + '\n'
 
     def __repr__(self):
         return '<BinarySearchTree>\n %s' % self.__str__()
 
     # takes value, returns node with key value
     def insert(self, k):
-        pass
+        new_node = BSTNode(k)
+        if not self.root:
+            self.root = new_node
+        else:
+            location, parent = self.root, None
+            while location is not None:
+                parent = location
+                location = location.left if self.less(new_node.key, location.key) else location.right
+        
+            if self.less(new_node.key, parent.key):
+                parent.left = new_node
+            else:
+                parent.right = new_node
 
     # takes node, returns node
     # return the node with the smallest key greater than n.key

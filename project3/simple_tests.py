@@ -12,8 +12,27 @@ def _main():
     root = BSTNode(4, right=mid_right, left=mid_left)
 
     tr = BinarySearchTree(root=root, less=less_than)
+    
+    #print tr
 
-    print tr
+    tr.insert(20)
+
+    #print tr
+
+    newTree = BinarySearchTree()
+    newTree.insert(10)
+    newTree.insert(8)
+    newTree.insert(12)
+    newTree.insert(14)
+    newTree.insert(16)
+
+    assert newTree.root.key == 10
+    assert newTree.root.left.key == 8
+    assert newTree.root.right.key == 12
+    assert newTree.root.right.right.key == 14
+    assert newTree.root.right.right.right.key == 16
+
+    print newTree
 
 
 if __name__ == '__main__':
