@@ -35,6 +35,14 @@ class BSTNode(object):
             node.parent = self
         self._right = node
 
+    # returns the minimum from this node down
+    @property
+    def minimum(self):
+        frontier = self
+        while frontier.left:
+            frontier = frontier.left
+        return frontier
+
 
 def less_than(x,y):
     return x < y
@@ -97,10 +105,25 @@ class BinarySearchTree(object):
             else:
                 parent.right = new_node
 
+    @property
+    def minimum(self):
+        return self.root.minimum
+
     # takes node, returns node
     # return the node with the smallest key greater than n.key
     def successor(self, n):
-        pass
+        # Succ is min(right subtree) if exists
+        if n.right:
+            return n.right.minimum
+        
+        # ascend the tree until you take a right->left upward jump
+        # at which point the current node is the left child of
+        # the parent and the parent is greater than n
+        above_me, current = n.parent, n
+        while above_me and above_me.right is current:
+            current = above_me
+            above_me = above_me.parent
+        return above_me
 
     # return the node with the largest key smaller than n.key
     def predecessor(self, n):

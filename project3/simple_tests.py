@@ -34,6 +34,13 @@ def _main():
 
     print newTree
 
+    print newTree.minimum
+    print newTree.root.right.minimum
+
+    print
+    print newTree.successor(newTree.root.right.right.right)
+    print newTree.successor(newTree.root.left)
+    print newTree.successor(newTree.root)
 
 if __name__ == '__main__':
     _main()
