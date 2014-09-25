@@ -17,6 +17,7 @@ class BSTNode(object):
 
     @property
     def left(self):
+
         return self._left
     
     @left.setter
@@ -150,7 +151,27 @@ class BinarySearchTree(object):
     def search(self, k):
         pass
             
-    # takes node, returns node
+    # a function we discussed in class
+    # takes two nodes and replaces the first with the second
+    def transplant(self, n, n2):
+        if n == n.parent.left:
+            n.parent.left = n2
+            n2.parent = n.parent
+        elif n == n.parent.right:
+            n.parent.right = n2
+            n2.parent = n.parent
+        if n.left:
+            n2.left = n.left
+        if n.right:
+            n2.right = n.right
+
+    # uses the transplant helper function to replace a node
+    # and essentially delete it
     def delete_node(self, n):
-        pass
+        if n.right:
+            transplant(n,n.right.minimum)
+            return n
+        else:
+            transplant(n,n.left)
+            return n
 
