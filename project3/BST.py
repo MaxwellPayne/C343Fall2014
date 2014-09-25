@@ -125,11 +125,11 @@ class BinarySearchTree(object):
         if n.right:
             return n.right.minimum
         
-        # ascend the tree until you take a left->right upward jump
+        # ascend the tree until you take a right->left upward jump
         # at which point the current node is the left child of
         # the parent and the parent is greater than n
         above_me, current = n.parent, n
-        while above_me and above_me.left is current:
+        while above_me and above_me.right is current:
             current = above_me
             above_me = above_me.parent
         return above_me
@@ -141,10 +141,13 @@ class BinarySearchTree(object):
         # search up the tree until find a parent to the left
         # where the node is the right child and smaller than
         # the parent node.
-        while n.parent and n.parent.right is n:
-            n = n.parent
-            n.parent = n.parent.parent
-        return n.parent
+        if n.left == None and n.right == None:
+            return None
+        else:
+            while n.parent and n.parent.left is n:
+                n = n.parent
+                n.parent = n.parent.parent
+            return n.parent
 
     # takes key returns node
     # can return None
@@ -154,24 +157,38 @@ class BinarySearchTree(object):
     # a function we discussed in class
     # takes two nodes and replaces the first with the second
     def transplant(self, n, n2):
-        if n == n.parent.left:
-            n.parent.left = n2
-            n2.parent = n.parent
-        elif n == n.parent.right:
-            n.parent.right = n2
-            n2.parent = n.parent
-        if n.left:
+        if n is self.root:
             n2.left = n.left
-        if n.right:
             n2.right = n.right
+            if n2 is n2.parent.left:
+                n2.parent.left = None
+            elif n2 is n2.parent.right:
+                n2.parent.right = None
+            self.root = n2
+        else:
+            if n is n.parent.left:
+               n.parent.left = n2
+               #n2.parent = n.parent
+            elif n is n.parent.right:
+               n.parent.right = n2
+               #n2.parent = n.parent
+            if n2 is n.right:
+                n2.left = n.left
+            if n2 is n.left:
+                n2.right = n.right
 
     # uses the transplant helper function to replace a node
     # and essentially delete it
     def delete_node(self, n):
         if n.right:
-            transplant(n,n.right.minimum)
+            self.transplant(n,n.right.minimum)
+            return n
+        elif n.left:
+            self.transplant(n,n.left)
             return n
         else:
-            transplant(n,n.left)
-            return n
+            if n.parent.left == n:
+                n.parent.left = None
+            else:
+                n.parent.right = None
 
