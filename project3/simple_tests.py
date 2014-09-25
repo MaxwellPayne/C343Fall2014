@@ -22,25 +22,39 @@ def _main():
     newTree = BinarySearchTree()
     newTree.insert(10)
     newTree.insert(8)
-    newTree.insert(12)
     newTree.insert(14)
+    newTree.insert(13)
+    newTree.insert(12)
     newTree.insert(16)
 
-    assert newTree.root.key == 10
-    assert newTree.root.left.key == 8
-    assert newTree.root.right.key == 12
-    assert newTree.root.right.right.key == 14
-    assert newTree.root.right.right.right.key == 16
-
     print newTree
+
+    #assert newTree.root.key == 10
+    #assert newTree.root.left.key == 8
+    #assert newTree.root.right.key == 12
+    #assert newTree.root.right.right.key == 14
+    #assert newTree.root.right.left.key == 13
+    #assert newTree.root.right.right.right.key == 16
 
     print newTree.minimum
     print newTree.root.right.minimum
 
     print
-    print 'succ of tree.root.right.right.right %s' % newTree.successor(newTree.root.right.right.right)
+    print 'succ of tree.root.right.right %s' % newTree.successor(newTree.root.right.right)
     print 'succ of tree.root.left %s' % newTree.successor(newTree.root.left)
     print 'succ of tree.root %s' % newTree.successor(newTree.root)
+    
+    print 'pred of tree.root.right.right %s' % newTree.predecessor(newTree.root.right.right)
+    print 'pred of tree.root %s' % newTree.predecessor(newTree.root)
+    print 'pred of tree.root.left %s' % newTree.predecessor(newTree.root.left)
+
+    print 'delete tree.root.right %s' % newTree.delete_node(newTree.root.right)
+    print newTree
+    print 'delete tree.root %s' % newTree.delete_node(newTree.root)
+    print newTree.root
+    print newTree.root.right
+    print newTree
+
 
 if __name__ == '__main__':
     _main()
