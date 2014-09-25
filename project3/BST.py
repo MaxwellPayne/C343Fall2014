@@ -43,6 +43,14 @@ class BSTNode(object):
             frontier = frontier.left
         return frontier
 
+    # returns the maximum from this node down
+    @property
+    def maximum(self):
+        frontier = self
+        while frontier.right:
+            frontier = frontier.right
+        return frontier
+
 
 def less_than(x,y):
     return x < y
@@ -116,18 +124,26 @@ class BinarySearchTree(object):
         if n.right:
             return n.right.minimum
         
-        # ascend the tree until you take a right->left upward jump
+        # ascend the tree until you take a left->right upward jump
         # at which point the current node is the left child of
         # the parent and the parent is greater than n
         above_me, current = n.parent, n
-        while above_me and above_me.right is current:
+        while above_me and above_me.left is current:
             current = above_me
             above_me = above_me.parent
         return above_me
 
     # return the node with the largest key smaller than n.key
     def predecessor(self, n):
-        pass
+        if n.left:
+            return n.left.maximum
+        # search up the tree until find a parent to the left
+        # where the node is the right child and smaller than
+        # the parent node.
+        while n.parent and n.parent.right is n:
+            n = n.parent
+            n.parent = n.parent.parent
+        return n.parent
 
     # takes key returns node
     # can return None
