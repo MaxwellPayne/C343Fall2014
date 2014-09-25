@@ -38,9 +38,9 @@ def _main():
     print newTree.root.right.minimum
 
     print
-    print newTree.successor(newTree.root.right.right.right)
-    print newTree.successor(newTree.root.left)
-    print newTree.successor(newTree.root)
+    print 'succ of tree.root.right.right.right %s' % newTree.successor(newTree.root.right.right.right)
+    print 'succ of tree.root.left %s' % newTree.successor(newTree.root.left)
+    print 'succ of tree.root %s' % newTree.successor(newTree.root)
 
 if __name__ == '__main__':
     _main()
