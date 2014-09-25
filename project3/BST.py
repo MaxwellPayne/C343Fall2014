@@ -125,11 +125,11 @@ class BinarySearchTree(object):
         if n.right:
             return n.right.minimum
         
-        # ascend the tree until you take a left->right upward jump
+        # ascend the tree until you take a right->left upward jump
         # at which point the current node is the left child of
         # the parent and the parent is greater than n
         above_me, current = n.parent, n
-        while above_me and above_me.left is current:
+        while above_me and above_me.right is current:
             current = above_me
             above_me = above_me.parent
         return above_me
@@ -141,7 +141,7 @@ class BinarySearchTree(object):
         # search up the tree until find a parent to the left
         # where the node is the right child and smaller than
         # the parent node.
-        while n.parent and n.parent.right is n:
+        while n.parent and n.parent.left is n:
             n = n.parent
             n.parent = n.parent.parent
         return n.parent
@@ -171,7 +171,12 @@ class BinarySearchTree(object):
         if n.right:
             transplant(n,n.right.minimum)
             return n
-        else:
+        elif n.left:
             transplant(n,n.left)
             return n
+        else:
+            if n.parent.left == n:
+                n.parent.left = None
+            else:
+                n.parent.right = None
 
