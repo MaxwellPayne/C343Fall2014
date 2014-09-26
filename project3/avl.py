@@ -44,9 +44,10 @@ class AVLTree(BinarySearchTree):
 
     # takes value, returns node with key value
     def insert(self, k):
-        pass
+        inserted_node = super(AVLTree, self).insert(k)
+        print 'inserted %s' % inserted_node
 
     # takes node, returns node
     def delete_node(self, n):
-        pass
-
+        deleted_node = super(AVLTree, self).delete_node(n)
+        print 'deleted %s' % deleted_node
