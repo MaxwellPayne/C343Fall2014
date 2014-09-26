@@ -209,8 +209,7 @@ class BinarySearchTree(object):
         else:
             if n.parent.left is n:
                 n.parent.left = None
-                return n
             else:
                 n.parent.right = None
-                return n
+            return n
 
