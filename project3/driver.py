@@ -1,4 +1,4 @@
-import sys, os, time, random
+import sys, os, time, random, csv
 import pygame
 from segment_intersection import any_segments_intersect
 
@@ -40,7 +40,15 @@ def run_batch(bsizes):
     print "batch mode start"
     if bmode_graphics: pygame.init()
     tests_passed = True
+
+    # truncate the time file
+    timefile_name = 'times.csv'
+    open(timefile_name, 'w').truncate()
+
     for sz in bsizes:
+        # starting time for this trial
+        start_time = time.time()
+
         (w, h) = (sz, sz)
         screen, board, b1, b2 = None, None, None, None
         if bmode_graphics:
@@ -72,6 +80,13 @@ def run_batch(bsizes):
                 # reset the board
                 board.fill(bgcolor); screen.blit(board, (0, 0)); pygame.display.flip()
                 
+    
+        end_time = time.time()
+        # record end time, write the difference
+        with open(timefile_name, 'ab') as time_file:
+            writer = csv.writer(time_file)
+            writer.writerow([sz, end_time-start_time])
+
     if bmode_graphics: pygame.quit()
     if tests_passed:
         print("All tests passed!")
