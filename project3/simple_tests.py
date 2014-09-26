@@ -48,12 +48,14 @@ def _main():
     print 'pred of tree.root %s' % newTree.predecessor(newTree.root)
     print 'pred of tree.root.left %s' % newTree.predecessor(newTree.root.left)
 
-    print 'delete tree.root.right %s' % newTree.delete_node(newTree.root.right)
-    print newTree
-    print 'delete tree.root %s' % newTree.delete_node(newTree.root)
-    print newTree.root
-    print newTree.root.right
-    print newTree
+    #print 'delete tree.root.right %s' % newTree.delete_node(newTree.root.right)
+    #print newTree
+    #print 'delete tree.root %s' % newTree.delete_node(newTree.root)
+    #print newTree.root
+    #print newTree.root.right
+    #print newTree
+
+    print 'searching for a node with value 12 %s' % newTree.search(12) 
 
 
 if __name__ == '__main__':

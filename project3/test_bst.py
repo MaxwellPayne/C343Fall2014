@@ -77,4 +77,5 @@ l = []; post(T.root, l); print l
 
 print T.successor(T.search(((1 * 100, 173), (181, 370)))).key
 print T.predecessor(T.search(((0 * 100, 173), (181, 370)))).key
+print T
 

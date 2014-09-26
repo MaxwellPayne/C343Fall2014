@@ -10,7 +10,7 @@ class BSTNode(object):
         self.parent = None
 
     def __str__(self):
-        return 'Node(%s)' % self.key
+        return 'Node(%s)' % str(self.key)
 
     def __repr__(self):
         return self.__str__()
@@ -113,6 +113,7 @@ class BinarySearchTree(object):
                 parent.left = new_node
             else:
                 parent.right = new_node
+        return new_node
 
     @property
     def minimum(self):
@@ -149,10 +150,29 @@ class BinarySearchTree(object):
                 n.parent = n.parent.parent
             return n.parent
 
+    # helper function to check every node
+    def search_node(self,n,key):
+        if n.key == key:
+            return n
+        if self.less(n.key,key) and n.right:
+            return self.search_node(n.right,key)
+        elif n.left:
+            return self.search_node(n.left,key)
+
+
     # takes key returns node
     # can return None
     def search(self, k):
-        pass
+        #if not self.root:
+        #    return
+        #search_stack = ArrayStack()
+        #search_stack.push((self.root,self.root.key))
+        #while not search_stack.is_empty():
+        if self.root.key == k:
+            return self.root
+        else:
+            return self.search_node(self.root,k)
+
             
     # a function we discussed in class
     # takes two nodes and replaces the first with the second
@@ -184,11 +204,13 @@ class BinarySearchTree(object):
             self.transplant(n,n.right.minimum)
             return n
         elif n.left:
-            self.transplant(n,n.left)
+            self.transplant(n,n.left.maximum)
             return n
         else:
-            if n.parent.left == n:
+            if n.parent.left is n:
                 n.parent.left = None
+                return n
             else:
                 n.parent.right = None
+                return n
 
