@@ -8,6 +8,7 @@ class BSTNode(object):
         self.left = left
         self.right = right
         self.parent = None
+        self.height = 1
 
     def __str__(self):
         return 'Node(%s)' % str(self.key)
@@ -97,6 +98,18 @@ class BinarySearchTree(object):
 
     def __repr__(self):
         return '<BinarySearchTree>\n %s' % self.__str__()
+
+    def calculate_height(self):
+        if not self.root.left:
+            if not self.root.right:
+                return 1
+            else:
+                return 1 + self.root.right.height
+        else:
+            if not self.root.right:
+                return 1 + self.root.left.height
+            else:
+                return max(self.root.left.height,self.root.right.height)+1
 
     # takes value, returns node with key value
     def insert(self, k):
