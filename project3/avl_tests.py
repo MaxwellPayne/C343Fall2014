@@ -71,26 +71,24 @@ def _main():
 
     rr_tree.rotate_right(rr_tree.root)
 
-    #print rr_tree
+    print rr_tree
 
     #print colored('rotate_left test', 'blue')
     print 'rotate_left test'
 
-
-    rl_tree = build_rl_tree()
+    #rl_tree = build_rl_tree()
 
     #print rl_tree
 
-    rl_tree.rotate_left(rl_tree.root)
+    #rl_tree.rotate_left(rl_tree.root)
 
-    print rl_tree
+    #print rl_tree
 
+    #print rl_tree.delete_node(rl_tree.root)
 
-    print rl_tree.delete_node(rl_tree.root)
+    #print rl_tree.insert('Q')
 
-    print rl_tree.insert('Q')
-
-    print rl_tree
+    #print rl_tree
 
 
     tr = AVLTree()
@@ -100,10 +98,12 @@ def _main():
     tr.insert(3)
     tr.insert(5)
     tr.insert(8)
-
+	
     tr.delete_node(tr.search(5))
-
+    
     print tr
+
+    print tr.height
 
 
 if __name__ == '__main__':

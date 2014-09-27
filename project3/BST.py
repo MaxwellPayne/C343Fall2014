@@ -99,6 +99,8 @@ class BinarySearchTree(object):
     def __repr__(self):
         return '<BinarySearchTree>\n %s' % self.__str__()
 
+    # to be used for avl.py when it is working
+    '''
     def calculate_height(self):
         if not self.root.left:
             if not self.root.right:
@@ -110,6 +112,7 @@ class BinarySearchTree(object):
                 return 1 + self.root.left.height
             else:
                 return max(self.root.left.height,self.root.right.height)+1
+    '''
 
     # takes value, returns node with key value
     def insert(self, k):

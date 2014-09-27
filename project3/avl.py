@@ -42,6 +42,8 @@ class AVLTree(BinarySearchTree):
         old_top.right = switch_branch
 
     # doesn't work yet
+    # still trying to figure out how to implement this
+    '''
     def is_balanced(self,n):
         if not n.left:
             if not n.right:
@@ -54,7 +56,6 @@ class AVLTree(BinarySearchTree):
             else:
                 return (n.left.height-n.right.height)
 
-    # also doesn't work yet
     def rebalance(self,n):
         if(self.is_balanced(n) == 2):
             if(self.is_balanced(n.left) == 1):
@@ -68,7 +69,8 @@ class AVLTree(BinarySearchTree):
             else:
                 right_rotate(n.right)
                 left_rotate(n)
-
+        self.calculate_height(n)
+    '''
     # takes value, returns node with key value
     def insert(self, k):
         inserted_node = super(AVLTree, self).insert(k)
