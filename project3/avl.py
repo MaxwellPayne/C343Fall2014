@@ -5,6 +5,7 @@ from BST import BSTNode, BinarySearchTree
 class AVLNode(BSTNode):
     @property
     def height(self):
+        print 'inside height of %s' % self
         if (not self.left) and (not self.right):
             return 1
         
@@ -53,11 +54,12 @@ class AVLTree(BinarySearchTree):
         return new_top
 
     @staticmethod
-    def is_balanced(n):
+    def balance_factor(n):
         left_height = n.left.height if n.left else 0
         right_height = n.right.height if n.right else 0
-        balance_factor = abs(left_height - right_height)
-        return balance_factor < 2
+        balance_factor = left_height - right_height
+
+        return balance_factor
         """    
         if not n.left:
             if not n.right:
@@ -72,14 +74,37 @@ class AVLTree(BinarySearchTree):
 
 
     def rebalance(self, possible_offender):
-        if not possible_offender.parent or not possible_offender.parent.parent:
-            return
+
+        balance_factor = self.balance_factor(possible_offender)
         
-        top = possible_offender.parent.parent
-        new_top = possible_offender.parent
+        #top = possible_offender.parent.parent
+        new_top = possible_offender.parent if possible_offender.parent else None
 
-        if not self.is_balanced(top):
+        if abs(balance_factor) >= 2: # is unbalanced
 
+            if balance_factor < 0: # right heavy
+
+                balance_factor_at_right = self.balance_factor(possible_offender.right)
+
+                if balance_factor_at_right > 0: # right left heavy
+                    self.rotate_right(possible_offender.right)
+                    self.rotate_left(possible_offender)
+
+                else: # right right heavy
+                    self.rotate_left(possible_offender)
+
+
+            elif balance_factor > 0: # left heavy
+                
+                balance_factor_at_left = self.balance_factor(possible_offender.left)
+
+                if balance_factor_at_left < 0: # left right heavy
+                    self.rotate_left(possible_offender.left)
+                    self.rotate_right(possible_offender)
+                else:
+                    self.rotate_right(possible_offender)
+
+            """
             if top.left and top.left.left and possible_offender is top.left.left:
                 print 'r right case'
                 new_top = self.rotate_right(top)
@@ -96,7 +121,7 @@ class AVLTree(BinarySearchTree):
                 new_top = self.rotate_left(top)
             else:
                 raise Exception("we're doing this wrong")
-
+                """
 
         if new_top:
             self.rebalance(new_top)
@@ -124,7 +149,7 @@ class AVLTree(BinarySearchTree):
 
     # takes node, returns node
     def delete_node(self, n):
-        raise NotImplementedError('cant do delete')
-        deleted_node = super(AVLTree, self).delete_node(n)
-        #self.rebalance()
-        print 'deleted %s' % deleted_node
+        rebalance_point = super(AVLTree, self).delete_node(n)
+        print 'rebalance point is %s' % rebalance_point
+        self.rebalance(rebalance_point)
+        

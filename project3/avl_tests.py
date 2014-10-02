@@ -96,14 +96,22 @@ def _main():
     import random, sys
     sys.setrecursionlimit(100)
 
-    #for i in random.sample(xrange(90), 10):
-    for i in range(15):
+    numbers = random.sample(xrange(90), 10)
+    random.shuffle(numbers)
+
+    for i in numbers:
+    #for i in range(15):
         print termcolor.colored('test is inserting %d' % i, 'blue', attrs=['bold'])
         tr.insert(i)
         print tr
-        assert tr.is_balanced(tr.root)
+        pick = i
 	
-    
+
+
+    print termcolor.colored('test is deleting %d' % 11, 'red', attrs=['bold'])
+    tr.delete_node(tr.root)
+    print tr
+    print 'balance factor at root %d' % tr.balance_factor(tr.root)
 
 
 

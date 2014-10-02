@@ -202,39 +202,44 @@ class BinarySearchTree(object):
     # a function we discussed in class
     # takes two nodes and replaces the first with the second
     def transplant(self, n, n2):
+        n2.left = n.left
+        n2.right = n.right
+
+
+
+
+        if n2 is n2.parent.left:
+            n2.parent.left = None
+        elif n2 is n2.parent.right:
+            n2.parent.right = None
+
+
         if n is self.root:
-            n2.left = n.left
-            n2.right = n.right
-            if n2 is n2.parent.left:
-                n2.parent.left = None
-            elif n2 is n2.parent.right:
-                n2.parent.right = None
             self.root = n2
+
         else:
             if n is n.parent.left:
-               n.parent.left = n2
-               #n2.parent = n.parent
+                n.parent.left = n2
             elif n is n.parent.right:
-               n.parent.right = n2
-               #n2.parent = n.parent
-            if n2 is n.right:
-                n2.left = n.left
-            if n2 is n.left:
-                n2.right = n.right
+                n.parent.right = n2
+     
+
 
     # uses the transplant helper function to replace a node
     # and essentially delete it
     def delete_node(self, n):
         if n.right:
-            self.transplant(n,n.right.minimum)
-            return n
+            new_top = n.right.minimum
+            self.transplant(n, new_top)
+            return new_top
         elif n.left:
-            self.transplant(n,n.left.maximum)
-            return n
+            new_top = n.left.maximum
+            self.transplant(n, new_top)
+            return new_top
         else:
             if n.parent.left is n:
                 n.parent.left = None
             else:
                 n.parent.right = None
-            return n
+            return n.parent
 

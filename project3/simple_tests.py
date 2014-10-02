@@ -26,6 +26,9 @@ def _main():
     newTree.insert(13)
     newTree.insert(12)
     newTree.insert(16)
+    newTree.insert(17)
+    newTree.insert(18)
+    newTree.insert(19)
 
     print newTree
 
@@ -57,6 +60,8 @@ def _main():
 
     print 'searching for a node with value 12 %s' % newTree.search(12) 
 
+    newTree.delete_node(newTree.root)
+    print newTree
 
 if __name__ == '__main__':
     _main()
