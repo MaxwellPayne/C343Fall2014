@@ -102,8 +102,8 @@ def any_segments_intersect(S):
     endpoints = merge_sort(endpoints)
 
     # To do: replace with AVLTree. -Jeremy
-    T = BinarySearchTree(root=None, less=segment_less)
-    #T = AVLTree(root=None, less=segment_less)
+    #T = BinarySearchTree(root=None, less=segment_less)
+    T = AVLTree(root=None, less=segment_less)
 
     for p in endpoints:
         current_x = p[0]

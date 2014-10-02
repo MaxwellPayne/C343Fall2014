@@ -5,7 +5,6 @@ from BST import BSTNode, BinarySearchTree
 class AVLNode(BSTNode):
     @property
     def height(self):
-        print 'inside height of %s' % self
         if (not self.left) and (not self.right):
             return 1
         
@@ -146,10 +145,11 @@ class AVLTree(BinarySearchTree):
     def insert(self, k):
         inserted_node = super(AVLTree, self).insert(k)
         self.rebalance(inserted_node)
+        return inserted_node
 
     # takes node, returns node
     def delete_node(self, n):
         rebalance_point = super(AVLTree, self).delete_node(n)
         print 'rebalance point is %s' % rebalance_point
         self.rebalance(rebalance_point)
-        
+        return n
