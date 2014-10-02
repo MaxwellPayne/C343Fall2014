@@ -8,7 +8,7 @@ class BSTNode(object):
         self.left = left
         self.right = right
         self.parent = None
-        self.height = 1
+        #self.height = 1
 
     def __str__(self):
         return 'Node(%s)' % str(self.key)
@@ -18,7 +18,6 @@ class BSTNode(object):
 
     @property
     def left(self):
-
         return self._left
     
     @left.setter
@@ -58,10 +57,20 @@ def less_than(x,y):
     return x < y
 
 class BinarySearchTree(object):
-    def __init__(self, root = None, less=less_than):
-        self.root = root
+    def __init__(self, root = None, less=less_than, node_class=BSTNode):
+        self._root = root
         self.less = less
+        self._node_class = node_class
 
+    @property
+    def root(self):
+        return self._root
+
+    @root.setter
+    def root(self, node):
+        node.parent = None
+        self._root = node
+        
     def __str__(self):
         # recursive function that creates a list of nodes
         # for each level, None if node doesn't exist at that slot
@@ -116,7 +125,7 @@ class BinarySearchTree(object):
 
     # takes value, returns node with key value
     def insert(self, k):
-        new_node = BSTNode(k)
+        new_node = self._node_class(k)
         if not self.root:
             self.root = new_node
         else:

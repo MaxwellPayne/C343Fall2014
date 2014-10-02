@@ -1,4 +1,4 @@
-#from termcolor import colored
+import termcolor
 
 from avl import AVLNode, AVLTree
 
@@ -64,12 +64,12 @@ def _main():
 
     
 
-    #print colored('rotate_right test', 'blue')
+    """
     print 'rotate_right test'
 
     rr_tree = build_rr_tree()
 
-    rr_tree.rotate_right(rr_tree.root)
+    #rr_tree.rotate_right(rr_tree.root)
 
     print rr_tree
 
@@ -89,21 +89,22 @@ def _main():
     #print rl_tree.insert('Q')
 
     #print rl_tree
-
+    """
 
     tr = AVLTree()
-    tr.insert(30)
-    tr.insert(21)
-    tr.insert(0)
-    tr.insert(3)
-    tr.insert(5)
-    tr.insert(8)
-	
-    tr.delete_node(tr.search(5))
     
-    print tr
+    import random, sys
+    sys.setrecursionlimit(100)
 
-    print tr.height
+    #for i in random.sample(xrange(90), 10):
+    for i in range(15):
+        print termcolor.colored('test is inserting %d' % i, 'blue', attrs=['bold'])
+        tr.insert(i)
+        print tr
+        assert tr.is_balanced(tr.root)
+	
+    
+
 
 
 if __name__ == '__main__':
