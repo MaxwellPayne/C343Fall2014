@@ -3,8 +3,6 @@
 import sys, time, random
 import pygame
 
-from AlignmentCell import ParentDirection
-
 e_aplh = "abcdefghijklmnopqrstuvwxyz"
 dna_alph = "ACGT"
 
@@ -62,45 +60,57 @@ def render_board(board, font, s1, s2, F):
     for (x,y) in sorted(F.keys()):
         tile = create_tile(font, str(F[(x,y)]), tile_color)
         board.blit(tile, ((x+1)*TILE_SIZE, (y+1)*TILE_SIZE))
-    
+
+class ParentDirection:
+    """Enum of direction relationships"""
+    UP = "I"
+    LEFT = "D"
+    DIAG = "M"
 
 class Cell:
+    """A cell in a dynamic programming matrix that has a
+    value and remembers where its parent came from"""
     def __init__(self, val, direction):
         self.val, self.direction = val, direction
 
     def __repr__(self):
-        return '<Cell val %s direction %s>' % (self.val, self.direction)
+        return '<Cell %s %s>' % (self.val, self.direction)
+
+    def __cmp__(self, other):
+        """Allows Cells to be compared greater/less than by their val"""
+        return cmp(self.val, other.val)
+
 
 def seq_align(s1, s2, enable_graphics=True):
-    strX, strY = "AC", "CA"
+    strX, strY = s1, s2
     matrix = [[None for _ in range(len(strX) + 1)] for _ in range(len(strY) + 1)]
 
     for r, row in enumerate(matrix):
         for c, col in enumerate(matrix):
-            if r == 0 and c == 0:
-                # top left corner
+            if r == 0 and c == 0: # top left corner
                 matrix[r][c] = Cell(0, None)
-            elif r == 0:
+            elif r == 0: # look left
                 matrix[r][c] = Cell(-c, ParentDirection.LEFT)
-            elif c == 0:
+            elif c == 0: # look up
                 matrix[r][c] = Cell(-r, ParentDirection.UP)
-            else: # evaluate
+            else: # evaluate to look up, left, or diag
                 up, left, diag = matrix[r-1][c], matrix[r][c-1], matrix[r-1][c-1]
+                # x and y indices for the strings
+                x, y = c-1, r-1
                 
-
-
-    """for j, row in enumerate(matrix):
-        strrow = ''
-        for i, col in enumerate(row):
-            cell = AlignmentCell(i, j, strX, strY, s, matrix, parentDirection=)
-            matrix[j][i] = cell
-            print "I am %s and my parent is %s" % (cell, cell.parent)
-            strrow += str(( ("_" + strX)[i], ("_" + strY)[j]))
-        #print strrow"""
+                # each 'using' is a possible new cell for this space, using different parents
+                usingUp = Cell(up.val + s(strX[x], SPACE_CHAR), ParentDirection.UP)
+                usingLeft = Cell(left.val + s(SPACE_CHAR, strY[y]), ParentDirection.LEFT)
+                usingDiag = Cell(diag.val + s(strX[x], strY[y]), ParentDirection.DIAG)
+                # optimal choice is the cell with the maximum value
+                optimal = max((usingUp, usingLeft, usingDiag))
+                matrix[r][c] = optimal
+                
     for r in matrix:
         print r
-    
 
+# commented out for now so we can more specifically test
+# the seq_align function    
 """
 if len(sys.argv) == 2 and sys.argv[1] == 'test':
     f=open('tests.txt', 'r');tests= eval(f.read());f.close()
@@ -138,4 +148,4 @@ else:
 """
 
 if __name__ == '__main__':
-    seq_align(2,2)
+    seq_align("ACACACTA", "AGCACACA")
