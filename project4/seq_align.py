@@ -114,22 +114,20 @@ def seq_align(s1, s2, enable_graphics=True):
 
 bestStrX = []
 bestStrY = []                
-def getPathway(matrix, x, y, strPos, s1, s2):
+def getPathway(matrix, a, b, strPos, s1, s2):
     global bestStrX
     global bestStrY  
     strX, strY = s1, s2
-    if x == 0 or y == 0:
+    if a == 0 or b == 0:
         print bestStrX
         print bestStrY
         return
-    numRows = len(matrix)
-    numCols = len(matrix[0])
     if matrix[a][b].direction == ParentDirection.DIAG:
         bestStrX.insert(0,strX[strPos])
         bestStrY.insert(0,strY[strPos])
         getPathway(matrix, a-1, b-1, strX, strY)
         positionIn
-    elif matrix[a][b].direction == ParentDirection.UP
+    elif matrix[a][b].direction == ParentDirection.UP:
         bestStrX.insert(0, '_')
         bestStrY.insert(0,strY[strPos])
         getPathway(matrix, a, b-1, strX, strY)
