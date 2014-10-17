@@ -105,9 +105,41 @@ def seq_align(s1, s2, enable_graphics=True):
                 # optimal choice is the cell with the maximum value
                 optimal = max((usingUp, usingLeft, usingDiag))
                 matrix[r][c] = optimal
-                
+    strPos = len(strX)
+    getPathway(optimal, r, c, strPos, strX, strY)
+
     for r in matrix:
         print r
+
+
+bestStrX = []
+bestStrY = []                
+def getPathway(matrix, x, y, strPos, s1, s2):
+    global bestStrX
+    global bestStrY  
+    strX, strY = s1, s2
+    if x == 0 or y == 0:
+        print bestStrX
+        print bestStrY
+        return
+    numRows = len(matrix)
+    numCols = len(matrix[0])
+    if matrix[a][b].direction == ParentDirection.DIAG:
+        bestStrX.insert(0,strX[strPos])
+        bestStrY.insert(0,strY[strPos])
+        getPathway(matrix, a-1, b-1, strX, strY)
+        positionIn
+    elif matrix[a][b].direction == ParentDirection.UP
+        bestStrX.insert(0, '_')
+        bestStrY.insert(0,strY[strPos])
+        getPathway(matrix, a, b-1, strX, strY)
+    else:
+        bestStrX.insert(0,strX[strPos])
+        bestStrY.insert(0, '_')
+        getPathway(matrix, a-1, b, strX, strY)
+    strPos -= 1
+
+
 
 # commented out for now so we can more specifically test
 # the seq_align function    
