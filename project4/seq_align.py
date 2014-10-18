@@ -81,21 +81,24 @@ class Cell:
         return cmp(self.val, other.val)
 
 
+bestStrX = []
+bestStrY = []                
+
 def seq_align(s1, s2, enable_graphics=True):
     strX, strY = s1, s2
     matrix = [[None for _ in range(len(strX) + 1)] for _ in range(len(strY) + 1)]
 
     for r, row in enumerate(matrix):
-        for c, col in enumerate(matrix):
+        for c, col in enumerate(row):
             if r == 0 and c == 0: # top left corner
                 matrix[r][c] = Cell(0, None)
             elif r == 0: # look left
                 matrix[r][c] = Cell(-c, ParentDirection.LEFT)
             elif c == 0: # look up
                 matrix[r][c] = Cell(-r, ParentDirection.UP)
-            else: # evaluate to look up, left, or diag
+            else: # evaluate to look up, left, or diag, make choice based on max value
                 up, left, diag = matrix[r-1][c], matrix[r][c-1], matrix[r-1][c-1]
-                # x and y indices for the strings
+                # x and y are indices for the strings
                 x, y = c-1, r-1
                 
                 # each 'using' is a possible new cell for this space, using different parents
@@ -105,43 +108,44 @@ def seq_align(s1, s2, enable_graphics=True):
                 # optimal choice is the cell with the maximum value
                 optimal = max((usingUp, usingLeft, usingDiag))
                 matrix[r][c] = optimal
-    strPos = len(strX)
-    getPathway(optimal, r, c, strPos, strX, strY)
 
-    for r in matrix:
-        print r
+    if enable_graphics:
+        """We don't use pygame graphics; just our own printing function"""
+        for line in matrix:
+            print line
+    
+    global bestStrX, bestStrY
+    bestStrX, bestStrY = [], []
+    return getPathway(matrix, r, c, strX, strY)
 
 
-bestStrX = []
-bestStrY = []                
-def getPathway(matrix, a, b, strPos, s1, s2):
-    global bestStrX
-    global bestStrY  
+def getPathway(matrix, r, c, s1, s2):
+    global bestStrX, bestStrY
     strX, strY = s1, s2
-    if a == 0 or b == 0:
-        print bestStrX
-        print bestStrY
-        return
-    if matrix[a][b].direction == ParentDirection.DIAG:
-        bestStrX.insert(0,strX[strPos])
-        bestStrY.insert(0,strY[strPos])
-        getPathway(matrix, a-1, b-1, strX, strY)
-        positionIn
-    elif matrix[a][b].direction == ParentDirection.UP:
-        bestStrX.insert(0, '_')
-        bestStrY.insert(0,strY[strPos])
-        getPathway(matrix, a, b-1, strX, strY)
-    else:
-        bestStrX.insert(0,strX[strPos])
-        bestStrY.insert(0, '_')
-        getPathway(matrix, a-1, b, strX, strY)
-    strPos -= 1
+    xLen, yLen = len(strX), len(strY)
+    x, y = c-1, r-1 # the positions in the strings
+
+    if c == 0 or r == 0: # made it to the top
+        # return the sequences
+        return tuple(map(lambda seq: ''.join(seq), (bestStrX, bestStrY)))
+
+    # for each possible direction, append the chars that correspond to the
+    # choice and recur up through the matrix following the direction
+    if matrix[r][c].direction == ParentDirection.DIAG:
+        bestStrX.append(strX[x])
+        bestStrY.append(strY[y])
+        return getPathway(matrix, r-1, c-1, strX, strY)
+    elif matrix[r][c].direction == ParentDirection.UP:
+        bestStrX.append(SPACE_CHAR)
+        bestStrY.append(strY[y])
+        return getPathway(matrix, r-1, c, strX, strY)
+    else: # ParentDirection.LEFT
+        bestStrX.append(strX[x])
+        bestStrY.append(SPACE_CHAR)
+        return getPathway(matrix, r, c-1, strX, strY)
 
 
 
-# commented out for now so we can more specifically test
-# the seq_align function    
-"""
 if len(sys.argv) == 2 and sys.argv[1] == 'test':
     f=open('tests.txt', 'r');tests= eval(f.read());f.close()
     cnt = 0; passed = True
@@ -175,7 +179,3 @@ else:
         print seq_align(s1, s2, enable_graphics)
     
     if enable_graphics: pygame.quit()
-"""
-
-if __name__ == '__main__':
-    seq_align("ACACACTA", "AGCACACA")
