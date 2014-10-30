@@ -25,7 +25,10 @@ class Heap:
         self.build_min_heap()
         
     def __repr__(self):
-        return repr(self.data)
+        """ ignore this for now, we can
+        use it if we want to debug
+        parent-child relationships later
+        
         for idx, data in enumerate(self.data):
             l, r = left(idx), right(idx)
             s = "%s" % data
@@ -36,14 +39,32 @@ class Heap:
             if s == "%s" % data:
                 s += ' has no children'
             print s
-        return 'done printing heap'
-        #return repr(self.data)
-    
+        return 'done printing heap'"""
+        
+        # only print as much data as
+        # self.heap_size cares about
+        return repr(self.data[:self.heap_size])
+
     def minimum(self):
         pass
 
     def insert(self, obj):
-        pass
+        self.heap_size += 1
+        idx = self.heap_size - 1
+
+        if self.heap_size >= len(self.data):
+            # expand the array if insert would
+            # overflow the array bounds
+            self.data += [obj]
+        else:
+            self.data[idx] = obj
+
+        lessThan = self.less
+        while idx >= 0 and lessThan(self.data[idx], self.data[parent(idx)]):
+            # start with data at the bottom, percolate up
+            # while parent is greater than
+            swap(self.data, idx, parent(idx))
+            idx = parent(idx)
 
     def extract_min(self):
         pass
@@ -85,15 +106,24 @@ if __name__ == "__main__":
     def compare_heaps(data):
         import heapq, copy
         library_heap = copy.copy(data)
-        heapq.heapify(library_heap)
 
-        print 'Our heap: %s' % Heap(data)
+        heapq.heapify(library_heap)
+        our = Heap(data)
+        
+        for i in range(45, 49):
+            
+            heapq.heappush(library_heap, i)
+            our.insert(i)
+
+        print '    our heap: %s' % our
         print 'library heap: %s' % library_heap
+
+
 
     # unit tests here
     from random import shuffle
-    d = range(15, 0, -1)
-    #shuffle(d)
+    d = range(0, 20, 2)
+    shuffle(d)
 
     compare_heaps(d)
 
