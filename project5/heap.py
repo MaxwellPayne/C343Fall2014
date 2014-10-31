@@ -67,10 +67,16 @@ class Heap:
             idx = parent(idx)
 
     def extract_min(self):
-        length = len(self.data)
+        if self.heap_size < 1:
+            raise Exception('No elements left to extract')
+
+        length = self.heap_size
+        extracted = self.minimum()
         self.data[0] = self.data[length - 1]
         self.heap_size = self.heap_size - 1
-        self.build_min_heap()
+
+        self.min_heapify(0)
+        return extracted
         
     def min_heapify(self, i):
         lessThan = self.less
