@@ -46,7 +46,7 @@ class Heap:
         return repr(self.data[:self.heap_size])
 
     def minimum(self):
-        pass
+        return self.data[0]
 
     def insert(self, obj):
         self.heap_size += 1
@@ -67,7 +67,10 @@ class Heap:
             idx = parent(idx)
 
     def extract_min(self):
-        pass
+        length = len(self.data)
+        self.data[0] = self.data[length - 1]
+        self.heap_size = self.heap_size - 1
+        self.build_min_heap()
         
     def min_heapify(self, i):
         lessThan = self.less
@@ -117,6 +120,10 @@ if __name__ == "__main__":
 
         print '    our heap: %s' % our
         print 'library heap: %s' % library_heap
+
+        # print our.minimum()
+        # our.extract_min()
+        # print our.minimum()
 
 
 
