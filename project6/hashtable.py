@@ -1,4 +1,15 @@
 
+#Linked list class will be how we handle chaining
+class Node:
+    def __init__(self, data, next=None):
+        self.data = data
+        self.next = next
+
+class LinkedList:
+    def __init__(self):
+        self.length = 0
+        self.head = None
+
 class Hashtable(object):
     doubling_factor = 0.5
 
@@ -47,9 +58,18 @@ class Hashtable(object):
         # does not handle collisions!
         idx = self._hash_key(key)
         
-        # throws exception on collision b/c haven't handled it yet
-        if self.array[idx] is not None: raise Exception('collision!')
-        self.array[idx] = value
+        #trying to handle collisions... definitely not right yet.
+        if self.array[idx] is not None:
+            node = Node(value)
+            node.next = self.array[idx].head.next
+            self.array[idx].head.next = node
+        else:
+            llist = LinkedList()
+            llist.head = self.array[idx]
+            node = Node(value)
+            nnode = Node(self.array[idx])
+            nnode.next = node  
+            self.array[idx] = value
         self.n += 1
         self._keys.add(key)
 
