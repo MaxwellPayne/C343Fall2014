@@ -1,21 +1,21 @@
-
-#Linked list class will be how we handle chaining
-class Node:
-    def __init__(self, data, next=None):
-        self.data = data
-        self.next = next
-
-class LinkedList:
-    def __init__(self):
-        self.length = 0
-        self.head = None
+from LinkedList import Node, LinkedList
 
 class Hashtable(object):
+    """hashtable implementation using
+    division method hashing and chaining
+    to resolve collisions"""
     doubling_factor = 0.5
+    halving_factor  = 0.25
 
     def __init__(self, dict):
-        self.n, self.m = 0, len(dict) * 4
-        self.array = [None for _ in xrange(self.m)]
+        self._size = len(dict) * 4
+
+        if self._size % 2 == 0:
+            # ensure that size is always odd
+            self._size += 1
+
+        self.slots_taken = 0
+        self.array = [None for _ in xrange(self._size)]
         self._keys = set(dict.keys())
         for k, v in dict.iteritems():
             self[k] = v
@@ -27,65 +27,87 @@ class Hashtable(object):
         return self.__class__
 
     @property
+    def size(self):
+        return self._size
+
+    @property
     def load_factor(self):
-        return self.n / float(self.m)
+        return self.slots_taken / float(self._size)
 
     def _hash_key(self, key):
-        return hash(key) % self.m
+        """simple division method hashing"""
+        return hash(key) % self._size
 
     def _double(self):
-        print 'doubling!'
+        print 'doubling at load factor %s' % str(self.load_factor)
         old_array = self.array
-        old_hashkeys = map(lambda k: self._hash_key(k), self.keys())
-        # cloning keys this way does not handle collisions
 
-        # double m, create a doubled array
-        self.m *= 2
-        self.array = [None for _ in xrange(self.m)]
-        
-        for key, old_hashkey in (self.keys(), old_hashkeys):
-            # copy all the (key, value) pairs over to new array
-            self.array[self._hash_key] = old_array[old_hashkey]
+        self._size = self._size * 2 + 1
+        # ensure an odd new size
 
+        self.array = [None for _ in xrange(self._size)]
+        self.slots_taken = 0
+
+        for old_cell in old_array:
+            # copy over all the old keys, re-hashing them because
+            # self._hash_key works differenetly with new self._size
+            if old_cell is not None:
+                node = old_cell.head
+                while node:
+                    self[node.key] = node.value
+                    node = node.next
+
+    def _halve(self):
+        raise NotImplementedError('haven\'t figured out how to halve yet')
 
     def __getitem__(self, key):
-        hashkey = self._hash_key(key)
-        if self.array[hashkey] is None:
-            raise KeyError('key %s is not in hashtable' % str(key))
-        return self.array[self._hash_key(key)]
+        if key not in self._keys:
+            # all keys are tracked in this set
+            # if it isn't there, it was never inserted
+            raise KeyError('key %s is not in hashtable' % str(key))            
+
+        hashslot = self._hash_key(key)
+        node = self.array[hashslot].head
+        while node:
+            if node.key == key:
+                return node.value
+            node = node.next
 
     def __setitem__(self, key, value):
-        # does not handle collisions!
         idx = self._hash_key(key)
-        
-        #trying to handle collisions... definitely not right yet.
-        if self.array[idx] is not None:
-            node = Node(value)
-            node.next = self.array[idx].head.next
-            self.array[idx].head.next = node
-        else:
-            llist = LinkedList()
-            llist.head = self.array[idx]
-            node = Node(value)
-            nnode = Node(self.array[idx])
-            nnode.next = node  
-            self.array[idx] = value
-        self.n += 1
         self._keys.add(key)
+        
+        node = Node(key, value)
+        
+        if self.array[idx] is not None:
+             # collision! llist already exists here, add to it
+            self.array[idx].head = node
+        else: # build a llist at empty slot
+            self.slots_taken += 1
+            llist = LinkedList(head=node)
+            self.array[idx] = llist
 
         if self.load_factor >= self.cls.doubling_factor:
             self._double()
 
     def __delitem__(self, key):
-        # {insert delete code here}
-        self.n -= 1
+        # {insert actual delete code here}
+
         self._keys.remove(key)
+        if self.load_factor <= self.cls.halving_factor:
+            self._halve()
 
     def keys(self):
         return tuple(self._keys)
 
     def __str__(self):
-        return str(self.array)
+        cells = []
+        for idx in range(self._size):
+            cells.append('[%s] -> %s' % (idx, self.array[idx]))
+        return '\n'.join(cells)
+
+    def __repr__(self):
+        return str(self)
 
 
 if __name__ == '__main__':
@@ -94,17 +116,28 @@ if __name__ == '__main__':
     INIT_KEY_COUNT = 10 # number of keys initially inserted
     ks = tuple((random.randrange(10000) for _ in xrange(INIT_KEY_COUNT)))
     vs = tuple((random.randrange(10000) for _ in xrange(INIT_KEY_COUNT)))
+
     d = {}
+    
     for k, v in zip(ks, vs):
         d[k] = v
 
     h = Hashtable(d)
 
-    # filling the Hashtable with these extra keys will
-    # force it to hit the doubling threshold
-    ks2 = tuple((random.randrange(10000) for _ in xrange(INIT_KEY_COUNT)))
-    vs2 = tuple((random.randrange(10000) for _ in xrange(INIT_KEY_COUNT)))
-    for k, v in zip(ks2, vs2):
+    print h
+    print '\n' * 3
+
+    while True:
+        # fills hashtable until it doubles
+        begin_size = h.size
+        k, v = random.randrange(10000), random.randrange(10000)
         h[k] = v
-    
-    print h.keys()
+        if h.size != begin_size:
+            break
+        
+    # print doubled hashtable
+    print h
+
+    for k in h.keys():
+        # print all keys and their values
+        print '%s : %s' % (k, h[k])
