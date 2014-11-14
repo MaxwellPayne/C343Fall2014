@@ -50,7 +50,7 @@ class Hashtable(object):
 
         for old_cell in old_array:
             # copy over all the old keys, re-hashing them because
-            # self._hash_key works differenetly with new self._size
+            # self._hash_key works differently with new self._size
             if old_cell is not None:
                 node = old_cell.head
                 while node:
@@ -58,7 +58,23 @@ class Hashtable(object):
                     node = node.next
 
     def _halve(self):
-        raise NotImplementedError('haven\'t figured out how to halve yet')
+        print 'halving at load factor %s' % str(self.load_factor)
+        old_array = self.array
+
+        self._size = self_size / 2 + 1
+        #ensure an odd new array size
+
+        self.array = [None for _ in xrange(self._size)]
+        self.slots_taken = 0
+
+        for old_cell in old_array:
+            # copy over all the old keys, re-hashing them because
+            # self._hash_key works differently with new self._size
+            if old_cell is not None:
+                node = old_cell.head
+                while node:
+                    self[node.key] = node.value
+                    node = node.next
 
     def __getitem__(self, key):
         if key not in self._keys:
@@ -92,8 +108,15 @@ class Hashtable(object):
 
     def __delitem__(self, key):
         # {insert actual delete code here}
+        idx = self._hash_key(key)
+
+        # working on this
+        for node in self.array[idx]:
+            if node.key == key:
+
 
         self._keys.remove(key)
+
         if self.load_factor <= self.cls.halving_factor:
             self._halve()
 
