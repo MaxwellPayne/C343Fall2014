@@ -16,7 +16,7 @@ class Hashtable(object):
 
         self.slots_taken = 0
         self.array = [None for _ in xrange(self._size)]
-        self._keys = set(dict.keys())
+        self._keys = set()
         for k, v in dict.iteritems():
             self[k] = v
 
@@ -47,6 +47,7 @@ class Hashtable(object):
 
         self.array = [None for _ in xrange(self._size)]
         self.slots_taken = 0
+        self._keys = set()
 
         for old_cell in old_array:
             # copy over all the old keys, re-hashing them because
@@ -66,6 +67,7 @@ class Hashtable(object):
 
         self.array = [None for _ in xrange(self._size)]
         self.slots_taken = 0
+        self._keys = set()
 
         for old_cell in old_array:
             # works the same as doubling
@@ -90,24 +92,33 @@ class Hashtable(object):
 
     def __setitem__(self, key, value):
         idx = self._hash_key(key)
-        self._keys.add(key)
-        
-        node = Node(key, value)
-        
-        if self.array[idx] is not None:
-             # collision! llist already exists here, add to it
-            self.array[idx].head = node
-        else: # build a llist at empty slot
-            self.slots_taken += 1
-            llist = LinkedList(head=node)
-            self.array[idx] = llist
 
-        if self.load_factor >= self.cls.doubling_factor:
-            self._double()
+        if key in self._keys: # overwrite old value for key
+            search_link = self.array[idx].head
+            while search_link:
+                if search_link.key == key:
+                    search_link.value = value
+                    break
+                search_link = search_link.next
+            else:
+                raise Exception('Hashtable thought key %s already existed in a linked list but it did not' % str(key))
+        
+        else: # key not in table, add a new link for it
+            self._keys.add(key)            
+            node = Node(key, value)
+        
+            if self.array[idx] is not None:
+                # collision! llist already exists here, add to it
+                self.array[idx].head = node
+            else: # build a llist at empty slot
+                self.slots_taken += 1
+                llist = LinkedList(head=node)
+                self.array[idx] = llist
+
+            if self.load_factor >= self.cls.doubling_factor:
+                self._double()
 
     def __delitem__(self, key):
-        # {insert actual delete code here}
-
         idx = self._hash_key(key)
 
         # Only checks the slot in the array that this key could be in,
@@ -146,6 +157,15 @@ class Hashtable(object):
 
 if __name__ == '__main__':
     import random
+
+
+    """Tests overwriting of old elements"""
+    h = Hashtable({1:'One', 2:'Two'})
+    print str(h) + '\n\n'
+    h[1] = 'REpeated'
+    print h
+    exit(0)
+
 
     INIT_KEY_COUNT = 10 # number of keys initially inserted
     ks = tuple((random.randrange(10000) for _ in xrange(INIT_KEY_COUNT)))
