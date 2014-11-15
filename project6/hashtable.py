@@ -39,7 +39,7 @@ class Hashtable(object):
         return hash(key) % self._size
 
     def _double(self):
-        print 'doubling at load factor %s' % str(self.load_factor)
+        #print 'doubling at load factor %s' % str(self.load_factor)
         old_array = self.array
 
         self._size = self._size * 2 + 1
@@ -58,7 +58,7 @@ class Hashtable(object):
                     node = node.next
 
     def _halve(self):
-        print 'halving at load factor %s' % str(self.load_factor)
+        #print 'halving at load factor %s' % str(self.load_factor)
         old_array = self.array
 
         self._size = self_size / 2 + 1
@@ -68,8 +68,7 @@ class Hashtable(object):
         self.slots_taken = 0
 
         for old_cell in old_array:
-            # copy over all the old keys, re-hashing them because
-            # self._hash_key works differently with new self._size
+            # works the same as doubling
             if old_cell is not None:
                 node = old_cell.head
                 while node:
@@ -108,12 +107,24 @@ class Hashtable(object):
 
     def __delitem__(self, key):
         # {insert actual delete code here}
+
         idx = self._hash_key(key)
 
-        # working on this
-        for node in self.array[idx]:
-            if node.key == key:
-
+        # Only checks the slot in the array that this key could be in,
+        # then moves pointers to remove it from chain.
+        if self.array[idx].head.key == key:
+            self.array[idx].head.next = self.array[idx].head
+        else:
+            prev = self.array[idx].head
+            current = self.array[idx].head.next
+            notfound = True
+            while(notFound):
+                if current.key == key:
+                    prev.next = prev.next.next
+                    notFound = False
+                else:
+                    prev = current
+                    current = current.next
 
         self._keys.remove(key)
 
